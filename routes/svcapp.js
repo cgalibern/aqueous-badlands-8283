@@ -4,16 +4,28 @@ var router = express.Router();
 var bodyParser = require('body-parser');
 var urlencode = bodyParser.urlencoded({ extended: false });
 
-var services = [ "svc0", "svc1"]
+// Redis connection
+var redis = require('redis');
+if (process.env.REDISTOGO_URL) {
+  var rtg   = require("url").parse(process.env.REDISTOGO_URL);
+  var client = redis.createClient(rtg.port, rtg.hostname);
+  client.auth(rtg.auth.split(":")[1]);
+} else {
+  var client = redis.createClient();
+  client.select((process.env.NODE_ENV || 'development').length);
+}
+// End Redis Connection
 
 router.route('')
   .get(function(request, response){
+    client.hkeys('services', function (err, services) {
      response.json(services);
+   });
   })
 
   .post(urlencode, function(request, response) {
     var service = request.body;
-    services.push(service.svcname);
+    client.hset('services', service.svcname, service.state);
     response.status(201).json("created new service: "+service.svcname);
   });
 
@@ -22,20 +34,30 @@ router.route('/about')
       response.send('About svcmgt');
     });
 
-router.route('/:id')
+router.route('/:svcname')
   .get(function(request, response){
-     var id = request.params.id;
-     if (!services[id]) { response.status(404).json('not found');}
-     else { response.json("service id "+ id + ': ' + services[id]);}
+     var svcname = request.params.svcname;
+     client.hget('services', svcname, function(error, state) {
+       if(error) throw error;
+       if (!state) {
+         response.status(404).json("not found service name: " + svcname);
+       } else {
+         response.json("service:"+ svcname + ' state:' + state);
+       }
+     });
   })
 
   .delete(function(request, response) {
-    var id = request.params.id;
-    if (services[id]=="") { response.status(404).json('not found');}
-    services.splice(id, 1);
-    response.status(204).json("delete service id: "+id);
+    var svcname = request.params.svcname;
+    client.hdel('services', svcname, function (error, success) {
+      if(error) throw error;
+      if (success>0) {
+        response.status(204).json("delete service name: " + svcname);
+      } else {
+        response.status(404).json("not found service name: " + svcname);
+      }
     });
-
+  });
 
 
 module.exports = router;

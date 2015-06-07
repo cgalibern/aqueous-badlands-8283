@@ -1,0 +1,10 @@
+<div class="snapshotmgt-icons">
+  <button ng-click="snapshotCtrl.reload()"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span></button>
+  <button ng-click="snapshotCtrl.toogleForm()">
+    <span class="glyphicon glyphicon-plus" aria-hidden="true" title="show form to declare new snapshot" ng-hide="snapshotCtrl.showform"></span>
+    <span class="glyphicon glyphicon-minus" aria-hidden="true" title="cancel form declare new snapshot" ng-show="snapshotCtrl.showform"></span>
+  </button>
+  Number of snapshots {{snapshotCtrl.snapshot_size}}
+  <snapshot-form ng-show="snapshotCtrl.showform">Snapshot form</snapshot-form>
+</div>
+<snapshot-list></snapshot-list>

@@ -1,0 +1,18 @@
+<table class="table table-hover">
+  <thead><tr><td>id</td><td>dbserver</td><td>dbname</td><td>actions</td></tr></thead>
+  <tbody>
+    <tr ng-repeat="snapshot in snapshotCtrl.snapshots">
+      <td>{{snapshot.id}}</td>
+      <td>{{snapshot.dbserver}}</td>
+      <td>{{snapshot.dbname}}</td>
+      <td>
+        <a href="#" ng-click="snapshotCtrl.refresh_snapshot(snapshot.id)">
+          <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+        </a>
+        <a href="#" ng-click="snapshotCtrl.delete(snapshot.dbserver, snapshot.dbname)">
+          <span class="glyphicon glyphicon-trash" aria-hidden="true" title="remove snapshot"></span>
+        </a>
+      </td>
+    </tr>
+  </tbody>
+</table>

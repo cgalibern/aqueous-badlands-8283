@@ -11,7 +11,7 @@
     snapshotC.navtab = 1;
 
     snapshotC.reload = function() {
-      $http.get(snapshotC.snapshots_url).success( function(data) {
+      $https.get(snapshotC.snapshots_url).success( function(data) {
         snapshotC.snapshots = data.map(function(s) {
             snapa=s.split(':');
             return {dbserver:snapa[0], dbname:snapa[1]}
@@ -23,7 +23,7 @@
     snapshotC.reload();
 
     snapshotC.addSnapshot = function() {
-      $http.post(snapshotC.snapshots_url, {dbserver:snapshotC.formDbserver, dbname: snapshotC.formDbname})
+      $https.post(snapshotC.snapshots_url, {dbserver:snapshotC.formDbserver, dbname: snapshotC.formDbname})
         .success(function(data, status, headers, config) {
           snapshotC.snapshots.push(data);
           snapshotC.snapshot_size++;
@@ -36,7 +36,7 @@
     };
 
     snapshotC.delete = function(dbserver, dbname) {
-      $http.delete(snapshotC.snapshots_url + "/" + dbserver +":"+ dbname)
+      $https.delete(snapshotC.snapshots_url + "/" + dbserver +":"+ dbname)
         .success(function (data, status, headers, config) {
           snapshotC.snapshots = snapshotC.snapshots.filter(function (e){
             return e.dbserver !== dbserver && e.dbname != dbname;

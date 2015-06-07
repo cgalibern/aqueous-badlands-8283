@@ -4,7 +4,7 @@
     var snapshotC = this;
     //snapshotC.snapshots_url = "http://localhost:3000/snapshots"
     //snapshotC.snapshots_url = "http://192.168.0.5:3000/snapshots"
-    snapshotC.snapshots_url = "http://localhost:3000/snapshots/"
+    snapshotC.snapshots_url = "../snapshots/"
     snapshotC.snapshots = [];
     snapshotC.snapshot_size = 0;
     snapshotC.showform = false;
